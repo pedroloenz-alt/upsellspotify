@@ -60,7 +60,7 @@ function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
         clearInterval(interval);
         setTimeout(onComplete, 900);
       }
-    }, 28);
+    }, 21);
 
     return () => clearInterval(interval);
   }, [onComplete]);
