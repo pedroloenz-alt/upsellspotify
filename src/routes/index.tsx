@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 import backgroundAsset from "../assets/background.png.asset.json";
 
@@ -15,6 +16,9 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
+const WELCOME_TEXT =
+  "¡Gracias por tu compra! Estamos felices de que hayas tomado la decisión de formar parte del mayor movimiento de ingresos extra con Spotify. Esperamos que disfrutes de las canciones seleccionadas para que las evalúes y, aún más, esperamos que puedas convertirte en uno de nuestros casos de éxito. Serás redirigido";
 
 function SpotifyLogo({ className }: { className?: string }) {
   return (
@@ -43,7 +47,77 @@ function CheckmarkIcon({ className }: { className?: string }) {
   );
 }
 
+function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < WELCOME_TEXT.length) {
+        setDisplayedText(WELCOME_TEXT.slice(0, index + 1));
+        index++;
+      } else {
+        clearInterval(interval);
+        setTimeout(onComplete, 900);
+      }
+    }, 28);
+
+    return () => clearInterval(interval);
+  }, [onComplete]);
+
+  return (
+    <div className="flex min-h-[340px] flex-col items-center justify-center px-7 py-10 text-center">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(29,185,84,0.12)] text-[#1DB954]">
+        <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+          <path
+            d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <h2 className="mb-4 text-[18px] font-bold tracking-[-0.3px] text-white">
+        Bienvenido a Spotify Rewards
+      </h2>
+      <p className="min-h-[120px] text-left text-[14.5px] leading-[1.7] text-[#a7a7a7]">
+        {displayedText}
+        <span className="ml-0.5 inline-block h-[18px] w-[2px] animate-blink bg-[#1DB954] align-middle" />
+      </p>
+    </div>
+  );
+}
+
+function SuccessScreen() {
+  return (
+    <div className="flex flex-col items-center px-7 pb-8 pt-8 text-center animate-fade-in-up">
+      {/* Success badge */}
+      <div className="mb-6 flex h-[72px] w-[72px] animate-pulse-spotify items-center justify-center rounded-full border-2 border-[#1DB954] bg-[rgba(29,185,84,0.12)]">
+        <CheckmarkIcon className="h-[34px] w-[34px] text-[#1DB954]" />
+      </div>
+
+      <h1 className="mb-3 text-[26px] font-black tracking-[-0.5px] text-white">
+        ¡ACCESO CONCEDIDO!
+      </h1>
+      <p className="mb-7 text-[14.5px] leading-relaxed text-[#a7a7a7]">
+        Tu registro se ha completado correctamente. Haz clic en el botón de abajo para entrar en la aplicación y reclamar tu saldo.
+      </p>
+
+      <button
+        type="button"
+        className="mb-5 w-full rounded-full bg-[#1DB954] px-6 py-[18px] text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
+      >
+        Entrar a la aplicación
+      </button>
+
+      <div id="vendepay-upsell-container" className="w-full" />
+    </div>
+  );
+}
+
 function Index() {
+  const [showSuccess, setShowSuccess] = useState(false);
+
   return (
     <div
       className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-10"
@@ -59,29 +133,7 @@ function Index() {
             </span>
           </div>
 
-          {/* Content */}
-          <div className="flex flex-col items-center px-7 pb-8 pt-8 text-center">
-            {/* Success badge */}
-            <div className="mb-6 flex h-[72px] w-[72px] animate-pulse-spotify items-center justify-center rounded-full border-2 border-[#1DB954] bg-[rgba(29,185,84,0.12)]">
-              <CheckmarkIcon className="h-[34px] w-[34px] text-[#1DB954]" />
-            </div>
-
-            <h1 className="mb-3 text-[26px] font-black tracking-[-0.5px] text-white">
-              ¡ACCESO CONCEDIDO!
-            </h1>
-            <p className="mb-7 text-[14.5px] leading-relaxed text-[#a7a7a7]">
-              Tu registro se ha completado correctamente. Haz clic en el botón de abajo para entrar en la aplicación y reclamar tu saldo.
-            </p>
-
-            <button
-              type="button"
-              className="mb-5 w-full rounded-full bg-[#1DB954] px-6 py-[18px] text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
-            >
-              Entrar a la aplicación
-            </button>
-
-            <div id="vendepay-upsell-container" className="w-full" />
-          </div>
+          {showSuccess ? <SuccessScreen /> : <WelcomeScreen onComplete={() => setShowSuccess(true)} />}
         </div>
 
         <footer className="my-5 text-center text-[11px] tracking-[0.2px] text-[#535353]">
