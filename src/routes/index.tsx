@@ -1,24 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import backgroundAsset from "../assets/background.png.asset.json";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Desken" },
+      { name: "description", content: "Página em construção — Desken" },
+      { property: "og:title", content: "Desken" },
+      { property: "og:description", content: "Página em construção — Desken" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
     <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
+      className="relative flex min-h-screen w-full items-center justify-center bg-background bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${backgroundAsset.url})` }}
     >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+      <main className="relative z-10 w-full max-w-7xl px-6 py-24">
+        {/* Conteúdo será adicionado pelo usuário no GitHub */}
+      </main>
     </div>
   );
 }
