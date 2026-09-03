@@ -6,7 +6,7 @@ import backgroundAsset from "../assets/background.png.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Acceso confirmado | Spotify Rewards" },
+      { title: "Spotify LATAM" },
       { name: "description", content: "Tu registro se ha completado correctamente." },
       { property: "og:title", content: "Acceso confirmado | Spotify Rewards" },
       { property: "og:description", content: "Tu registro se ha completado correctamente." },
