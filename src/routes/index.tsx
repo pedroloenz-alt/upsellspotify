@@ -111,11 +111,6 @@ function SuccessScreen() {
         Entrar a la aplicación
       </button>
 
-      <div id="vendepay-upsell-container" className="w-full" />
-    </div>
-  );
-}
-
 function Index() {
   const [showSuccess, setShowSuccess] = useState(false);
 
