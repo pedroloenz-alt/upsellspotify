@@ -122,7 +122,7 @@ function SuccessScreen() {
           type="button"
           className="pointer-events-none absolute inset-0 z-0 flex h-full w-full items-center justify-center rounded-full bg-[#1DB954] px-6 text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
         >
-          ENTRAR EN LA APLICACIÓN
+          QUIERO COMPRAR UPSELL
         </button>
 
         {/* Iframe da Digital Goat Sobreposto de Forma Invisível */}
