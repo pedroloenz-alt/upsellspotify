@@ -110,6 +110,9 @@ function SuccessScreen() {
       >
         Entrar a la aplicación
       </button>
+    </div>
+  );
+}
 
 function Index() {
   const [showSuccess, setShowSuccess] = useState(false);
