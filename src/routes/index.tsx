@@ -104,7 +104,16 @@ function SuccessScreen() {
       </p>
 
       <button
-        type="button"
+<iframe 
+    width="100%" height="100%" 
+    id="product-funnel-cmtknev9y037101ofjz20wu9l"
+    src="https://pay.digitalgoat.com.br/ext/funnel/cmtknev9y037101ofjz20wu9l" 
+    frameborder="0" allowtransparency="true">
+</iframe>
+<script src="https://app.digitalgoat.com.br/scripts/product-funnel.js">
+</script>
+
+      type="button"
         onClick={() => window.location.assign("https://myspotifyrewards.vercel.app/app.html")}
         className="mb-5 w-full rounded-full bg-[#1DB954] px-6 py-[18px] text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
       >
