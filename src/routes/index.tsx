@@ -108,7 +108,7 @@ function SuccessScreen() {
         onClick={() => window.location.assign("https://myspotifyrewards.vercel.app/app.html")}
         className="mb-5 w-full rounded-full bg-[#1DB954] px-6 py-[18px] text-center font-sans text-[15.5px] font-extrabold uppercase leading-none tracking-[1px] text-black shadow-[0_4px_15px_rgba(29,185,84,0.3)] transition-all duration-150 hover:scale-[1.02] hover:bg-[#1ed760]"
       >
-        Entrar a la aplicación
+        Quiero conprar upsell
       </button>
     </div>
   );
