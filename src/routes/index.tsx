@@ -20,31 +20,6 @@ export const Route = createFileRoute("/")({
 const WELCOME_TEXT =
   "¡Gracias por tu compra! Estamos felices de que hayas tomado la decisión de formar parte del mayor movimiento de ingresos extra con Spotify. Esperamos que disfrutes de las canciones seleccionadas para que las evalúes y, aún más, esperamos que puedas convertirte en uno de nuestros casos de éxito. Serás redirigido";
 
-function DigitalGoatFunnel() {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://app.digitalgoat.com.br/scripts/product-funnel.js";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => script.remove();
-  }, []);
-
-  return (
-    <div className="h-[700px] w-full">
-      <iframe
-        width="100%"
-        height="100%"
-        id="product-funnel-cmtknev9y037101ofjz20wu9l"
-        src="https://pay.digitalgoat.com.br/ext/funnel/cmtknev9y037101ofjz20wu9l"
-        frameBorder="0"
-        allowTransparency
-        title="DigitalGoat product funnel"
-      />
-    </div>
-  );
-}
-
 function SpotifyLogo({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className}>
@@ -136,7 +111,7 @@ function SuccessScreen() {
         Entrar a la aplicación
       </button>
 
-      <DigitalGoatFunnel />
+      <div id="vendepay-upsell-container" className="w-full" />
     </div>
   );
 }
