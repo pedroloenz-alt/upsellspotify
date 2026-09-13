@@ -113,6 +113,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: "!function (f, b, e, v, n, t, s) {\n  if (f.fbq) return;\n  n = f.fbq = function () {\n    n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);\n  };\n  if (!f._fbq) f._fbq = n;\n  n.push = n;\n  n.loaded = !0;\n  n.version = '2.0';\n  n.queue = [];\n  t = b.createElement(e);\n  t.async = !0;\n  t.src = v;\n  s = b.getElementsByTagName(e)[0];\n  s.parentNode.insertBefore(t, s);\n}(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', '28304632309230456');\nfbq('track', 'PageView');" }} />
       </head>
       <body>
+        <noscript><img height="1" width="1" style={{ display: "none" }} src="https://www.facebook.com/tr?id=28304632309230456&ev=PageView&noscript=1" /></noscript>
         {children}
         <Scripts />
       </body>
