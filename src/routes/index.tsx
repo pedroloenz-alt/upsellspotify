@@ -3,13 +3,20 @@ import { useEffect, useState } from "react";
 
 import backgroundAsset from "../assets/background.png.asset.json";
 
+declare global {
+  interface Window {
+    fbq?: any;
+    _fbq?: any;
+  }
+}
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Spotify LATAM" },
-      { name: "description", content: "Tu registro se ha completado correctamente." },
-      { property: "og:title", content: "Acceso confirmado | Spotify Rewards" },
-      { property: "og:description", content: "Tu registro se ha completado correctamente." },
+      { title: "Access Confirmed | Spotify Rewards" },
+      { name: "description", content: "Your registration has been completed successfully." },
+      { property: "og:title", content: "Access Confirmed | Spotify Rewards" },
+      { property: "og:description", content: "Your registration has been completed successfully." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -18,7 +25,7 @@ export const Route = createFileRoute("/")({
 });
 
 const WELCOME_TEXT =
-  "¡Gracias por tu compra! Estamos felices de que hayas tomado la decisión de formar parte del mayor movimiento de ingresos extra con Spotify. Esperamos que disfrutes de las canciones seleccionadas para que las evalúes y, aún más, esperamos que puedas convertirte en uno de nuestros casos de éxito. Serás redirigido";
+  "Thank you for your purchase! We are happy that you decided to be part of the largest extra income movement with Spotify. We hope you enjoy the selected songs for you to evaluate and, even more, we hope you can become one of our success stories. You will be redirected";
 
 function SpotifyLogo({ className }: { className?: string }) {
   return (
@@ -78,7 +85,7 @@ function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
         </svg>
       </div>
       <h2 className="mb-4 text-[18px] font-bold tracking-[-0.3px] text-white">
-        Bienvenido a Spotify Rewards
+        Welcome to Spotify Rewards
       </h2>
       <p className="min-h-[120px] text-left text-[14.5px] leading-[1.7] text-[#a7a7a7]">
         {displayedText}
@@ -92,7 +99,7 @@ function SuccessScreen() {
   const [isOcbActive, setIsOcbActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Função que ativa o estado de carregamento e redireciona após 8 segundos
+  // Ativa o estado de carregamento e redireciona para o app após 8 segundos
   const startRedirectTimer = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -105,7 +112,7 @@ function SuccessScreen() {
     const originalAlert = window.alert;
     window.alert = (msg?: any) => {
       if (typeof msg === "string" && (msg.includes("link de upsell") || msg.includes("ID do funil"))) {
-        console.warn("Aviso da Digital Goat ignorado:", msg);
+        console.warn("Digital Goat alert suppressed:", msg);
         return;
       }
       originalAlert(msg);
@@ -156,19 +163,19 @@ function SuccessScreen() {
       </div>
 
       <h1 className="mb-3 text-[26px] font-black tracking-[-0.5px] text-white">
-        ¡ACCESO CONCEDIDO!
+        ACCESS GRANTED!
       </h1>
       <p className="mb-7 text-[14.5px] leading-relaxed text-[#a7a7a7]">
-        Tu registro se ha completado correctamente. Haz clic en el botón de abajo para entrar en la aplicación y reclamar tu saldo.
+        Your registration has been completed successfully. Click the button below to enter the application and claim your balance.
       </p>
 
-      {/* Container do Botão */}
+      {/* Button Container */}
       <div
         onClick={handleContainerClick}
         onPointerDown={handleContainerClick}
         className="relative mb-5 h-[56px] w-full overflow-hidden rounded-full cursor-pointer"
       >
-        {/* Botão Visível com Animação de Spinner e texto CARGANDO... */}
+        {/* Botão Visível com animação de spinner e texto LOADING... */}
         <button
           type="button"
           disabled={isLoading}
@@ -180,10 +187,10 @@ function SuccessScreen() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              <span>CARGANDO...</span>
+              <span>LOADING...</span>
             </div>
           ) : (
-            "ENTRAR A LA APLICACIÓN"
+            "ENTER THE APPLICATION"
           )}
         </button>
 
@@ -205,6 +212,31 @@ function SuccessScreen() {
 function Index() {
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Integração do Meta Pixel (ID: 1439133961480878)
+  useEffect(() => {
+    if (!window.fbq) {
+      (function (f: any, b: any, e: any, v: any, n?: any, t?: any, s?: any) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+
+      window.fbq("init", "1439133961480878");
+    }
+    window.fbq("track", "PageView");
+  }, []);
+
   return (
     <div
       className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-10"
@@ -224,7 +256,7 @@ function Index() {
         </div>
 
         <footer className="my-5 text-center text-[11px] tracking-[0.2px] text-[#535353]">
-          &copy; 2026 Spotify Rewards. Todos los derechos reservados.
+          &copy; 2026 Spotify Rewards. All rights reserved.
         </footer>
       </main>
     </div>
