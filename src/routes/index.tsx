@@ -106,7 +106,7 @@ function SuccessScreen() {
   const [queryString, setQueryString] = useState("");
   const isRedirectingRef = useRef(false);
 
-  // Ativa o estado de carregamento e redireciona para o app após 6 segundos (para dar tempo do upsell processar)
+  // Ativa o estado de carregamento e redireciona APENAS quando o lead clica manualmente
   const startRedirectTimer = () => {
     if (isRedirectingRef.current) return;
     isRedirectingRef.current = true;
@@ -133,7 +133,6 @@ function SuccessScreen() {
     setQueryString(search);
 
     const params = new URLSearchParams(search);
-    // Ativa se houver token OCB ou se houver qualquer parâmetro vindo do checkout
     const hasToken = !!(params.get("OCB_SEC_TOKEN") || params.get("OCB_FUNNEL_ID") || search.length > 1);
 
     if (hasToken) {
@@ -148,20 +147,12 @@ function SuccessScreen() {
       }
     }
 
-    // Detecta clique no Iframe (Blur na window)
-    const handleBlur = () => {
-      startRedirectTimer();
-    };
-
-    window.addEventListener("blur", handleBlur);
-
     return () => {
-      window.removeEventListener("blur", handleBlur);
       window.alert = originalAlert;
     };
   }, []);
 
-  const handleContainerClick = () => {
+  const handleButtonClick = () => {
     startRedirectTimer();
   };
 
@@ -181,8 +172,8 @@ function SuccessScreen() {
 
       {/* Button Container */}
       <div
-        onClick={handleContainerClick}
-        onPointerDown={handleContainerClick}
+        onClick={handleButtonClick}
+        onPointerDown={handleButtonClick}
         className="relative mb-5 h-[56px] w-full overflow-hidden rounded-full cursor-pointer"
       >
         {/* Botão Visível com animação de spinner e texto LOADING... */}
@@ -252,6 +243,17 @@ function Index() {
       className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-10"
       style={{ backgroundImage: `url(${backgroundAsset.url})` }}
     >
+      {/* Meta Pixel Fallback Noscript */}
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          src="https://www.facebook.com/tr?id=1439133961480878&ev=PageView&noscript=1"
+          alt=""
+        />
+      </noscript>
+
       <main className="w-full max-w-[480px] animate-fade-in-up">
         <div className="overflow-hidden rounded-[20px] border border-white/[0.06] bg-[#181818] shadow-[0_15px_45px_rgba(0,0,0,0.6)]">
           {/* Header */}
